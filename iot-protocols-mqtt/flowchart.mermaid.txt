@@ -1,0 +1,23 @@
+flowchart TD
+    A[Start] --> B[Initialize Sensors]
+    B --> C[Connect to MQTT Broker]
+    C --> D[Subscribe to Topic iotcasette/#]
+    D --> E[Start Sending Data in Loop]
+    E --> F[Send Sensor Data to MQTT Broker]
+    F --> G{Is Data Valid?}
+    G -->|Yes| H[Send Data to Server via MQTT]
+    G -->|No| I[Log Error]
+    H --> J[Receive Data on Server]
+    J --> K{Is Temperature Data?}
+    K -->|Yes| L[Insert Temperature into DB]
+    K -->|No| M{Is Light State Data?}
+    M -->|Yes| N[Insert Light State into DB]
+    M -->|No| O[Log Error]
+    L --> P[Send Response to Client]
+    N --> P
+    P --> E
+    I --> E
+    O --> E
+    J --> Q[Wait for Next Data]
+    Q --> E
+    A --> Q
